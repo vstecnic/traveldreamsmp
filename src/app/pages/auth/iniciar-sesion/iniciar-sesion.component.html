@@ -1,0 +1,82 @@
+<section class="d-flex align-items-center justify-content-center" style="min-height: 100vh; background-color: hsl(0, 0%, 96%)">
+  <div class="container text-center text-lg-start">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body py-5 px-md-5">
+            <form class="row" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+              <h1><b>INICIAR SESIÓN</b></h1>
+
+              <!-- Campo de email -->
+              <div class="col-12 mb-3">
+                <label for="inputEmail" class="form-label">Correo Electrónico</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  id="inputEmail"
+                  placeholder="Ingrese su email"
+                  [ngClass]="{'is-invalid': formGroup.get('email')?.touched && formGroup.get('email')?.invalid}"
+                />
+                <div *ngIf="formGroup.get('email')?.touched && formGroup.get('email')?.invalid" class="invalid-feedback d-block">
+                  <p *ngIf="formGroup.get('email')?.errors?.['required']" class="text-danger">
+                    El email es requerido.
+                  </p>
+                  <p *ngIf="formGroup.get('email')?.errors?.['email']" class="text-danger">
+                    Por favor, ingresa un email válido.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Campo de contraseña con toggle mejorado -->
+              <div class="col-12 mb-3">
+                <label for="inputPass" class="form-label">Contraseña</label>
+                <div class="input-group">
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    class="form-control"
+                    formControlName="password"
+                    id="inputPass"
+                    placeholder="Ingrese su contraseña"
+                    [ngClass]="{'is-invalid': formGroup.get('password')?.touched && formGroup.get('password')?.invalid}"
+                  />
+                  <button class="btn btn-outline-secondary password-toggle-btn" 
+                          type="button" 
+                          (click)="togglePasswordVisibility()">
+                    <i class="bi" [class.bi-eye-fill]="!showPassword" [class.bi-eye-slash-fill]="showPassword"></i>
+                  </button>
+                </div>
+                <div *ngIf="formGroup.get('password')?.touched && formGroup.get('password')?.invalid" class="invalid-feedback d-block">
+                  <p *ngIf="formGroup.get('password')?.errors?.['required']" class="text-danger">
+                    La contraseña es requerida.
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Resto del formulario se mantiene igual -->
+              <div class="col-12 mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe" />
+                <label class="form-check-label" for="rememberMe">Recordarme</label>
+              </div>
+
+              <button type="submit" class=" boton mb-4 text-black text-opacity-50 text-center" [disabled]="formGroup.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Iniciar Sesión
+              </button>
+
+              <div class="mb-4 text-black text-opacity-50">¿Olvidaste tu contraseña?</div>
+              <a class=" boton anchor mb-4 text-black text-opacity-50 text-center" [routerLink]="['/recuperar-password']">
+                Recuperar Contraseña
+              </a>
+
+              <div class="mb-4 text-black text-opacity-50">¿No estás registrado aún?</div>
+              <a class="boton anchor mb-4 text-black text-opacity-50 text-center" routerLink="/registro">
+                Registrarse
+              </a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

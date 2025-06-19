@@ -1,0 +1,147 @@
+<div class="dashboard-container">
+  <!-- Encabezado -->
+  <div class="header">
+    <img *ngFor="let img of images" 
+         [src]="img.src" 
+         [alt]="img.alt" 
+         [style.height.px]="img.height">
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="loading; else content">
+    <p>Cargando información...</p>
+  </div>
+
+  <ng-template #content>
+    <div *ngIf="error; else profileContent" class="error-message">
+      {{ error }}
+    </div>
+
+    <ng-template #profileContent>
+      <div class="profile-section" *ngIf="usuario">
+        <h2>Bienvenido, {{ usuario.first_name }} {{ usuario.last_name }}</h2>
+        <div class="profile-details">
+          <div class="profile-image-container">
+            <img [src]="usuario.image" alt="Foto de perfil" class="profile-image">
+            <div class="image-upload">
+              <input type="file" id="profileImage" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+              <label for="profileImage" class="upload-button">Cambiar foto</label>
+            </div>
+          </div>
+          
+          <div class="profile-info">
+            <div *ngIf="!editMode">
+              <p><strong>Teléfono:</strong> {{ usuario.telephone }}</p>
+              <p><strong>DNI:</strong> {{ usuario.dni }}</p>
+              <p><strong>Dirección:</strong> {{ usuario.address }}</p>
+              <button (click)="toggleEditMode()" class="edit-button">Editar Perfil</button>
+              <!-- ¡ESTE ES EL BOTÓN QUE DEBERÍA APARECER! -->
+              <button (click)="navigateToChangePassword()" class="change-password-button">Cambiar Contraseña</button>
+            </div>
+
+            <!-- Sección de Edición de Perfil con nuevo estilo (Bootstrap) -->
+            <!-- Asegúrate de que el contenedor padre tenga suficiente espacio para centrar el formulario -->
+            <div *ngIf="editMode" class="d-flex justify-content-center align-items-center" style="width: 100%;">
+              <form (ngSubmit)="guardarCambios()" class="w-100 p-4 rounded shadow-lg bg-white edit-profile-form" style="max-width: 500px;">
+                <h2 class="text-center mb-4 text-dark-blue">Editar Perfil</h2>
+
+                <!-- Campo Teléfono -->
+                <div class="mb-3">
+                  <label for="telephone" class="form-label text-secondary">Teléfono</label>
+                  <input
+                    type="tel"
+                    id="telephone"
+                    [(ngModel)]="usuarioEditado.telephone"
+                    name="telephone"
+                    class="form-control rounded"
+                    placeholder="Ej: +54 9 11 1234 5678"
+                  />
+                </div>
+
+                <!-- Campo DNI -->
+                <div class="mb-3">
+                  <label for="dni" class="form-label text-secondary">DNI</label>
+                  <input
+                    type="text"
+                    id="dni"
+                    [(ngModel)]="usuarioEditado.dni"
+                    name="dni"
+                    class="form-control rounded"
+                    placeholder="Ej: 12345678"
+                  />
+                  <!-- Puedes mantener tu lógica de error personalizada si `error` es una cadena -->
+                  <div *ngIf="error && error.includes('DNI')" class="invalid-feedback d-block">
+                    {{ error }}
+                  </div>
+                </div>
+
+                <!-- Campo Dirección -->
+                <div class="mb-4">
+                  <label for="address" class="form-label text-secondary">Dirección</label>
+                  <input
+                    type="text"
+                    id="address"
+                    [(ngModel)]="usuarioEditado.address"
+                    name="address"
+                    class="form-control rounded"
+                    placeholder="Ej: Av. Principal 123, Ciudad"
+                  />
+                </div>
+
+                <!-- Mensaje de error general -->
+                <div *ngIf="error && !error.includes('DNI')" class="alert alert-danger rounded" role="alert">
+                  {{ error }}
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="d-grid gap-2">
+                  <button type="submit" [disabled]="loadingSave" class="btn btn-primary rounded">
+                    <span *ngIf="loadingSave" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Guardar Cambios
+                  </button>
+                  <button type="button" (click)="toggleEditMode()" class="btn btn-outline-secondary rounded">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+            <!-- Fin de la sección de Edición de Perfil con nuevo estilo -->
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de compras -->
+      <section class="historial-section">
+        <h2>Historial de Compras</h2>
+        
+        <div *ngIf="compras.length === 0" class="no-compras">
+          <p>No tienes compras registradas</p>
+        </div>
+
+        <div *ngFor="let compra of compras" class="compra-card" [class.local]="compra.esLocal">
+          <div class="compra-header">
+            <span class="fecha">{{ compra.fechaFormateada }}</span>
+            <span class="total">{{ compra.totalFormateado }}</span>
+          </div>
+          
+          <div class="compra-body">
+            <img [src]="compra.destino.image" [alt]="compra.destino.nombre_Destino">
+            
+            <div class="compra-info">
+              <h4>{{ compra.destino.nombre_Destino }}</h4>
+              <div class="compra-details">
+                <span>Cantidad: {{ compra.cantidad }}</span>
+                <span>Método: {{ compra.metodo_pago.nombrePago }}</span>
+              </div>
+              <span *ngIf="compra.esLocal" class="local-badge">Guardado localmente</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </ng-template>
+  </ng-template>
+</div>
+
+<!-- Agrega Font Awesome para los íconos de ojo (si los necesitas en tu proyecto) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

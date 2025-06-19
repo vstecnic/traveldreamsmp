@@ -1,0 +1,70 @@
+<div class="bg-light rounded-3 py-2 px-2 px-md-5 mb-1">
+	<div class="text-center mb-5">
+		<h1><b>CONTACTÁNOS</b></h1>
+	</div>
+	<div class="row gx-5 justify-content-center">
+		<div class="col-lg-8 col-xl-6">
+
+			<form [formGroup]="formgroup" id="contactForm">
+				<div class="form-floating mb-3">
+					<input class="form-control" id="name" type="text" placeholder="Enter your name..."
+						formControlName="name" name="name" />
+					<label for="name">Nombre</label>
+					<div *ngIf="formgroup.get('name')?.invalid && formgroup.get('name')?.touched"
+						class="text-danger mt-1">
+						Ingrese Nombre
+					</div>
+				</div>
+				<div class="form-floating mb-3">
+					<input class="form-control" id="email" type="email" placeholder="name@example.com"
+						formControlName="email" name="email" />
+					<label for="email">Email</label>
+					<div *ngIf="formgroup.get('email')?.invalid && formgroup.get('email')?.touched"
+						class="text-danger mt-1">
+						<ng-container *ngIf="formgroup.get('email')?.errors?.['required']">
+							Ingrese un email por favor.
+						</ng-container>
+						<ng-container *ngIf="formgroup.get('email')?.errors?.['email']">
+							El email ingresado no es válido.
+						</ng-container>
+					</div>
+				</div>
+				<div class="form-floating mb-3">
+					<input class="form-control" id="phone" type="tel" placeholder="(123) 456-7890"
+						formControlName="phone" name="phone" />
+					<label for="phone">WhatsApp</label>
+					<div *ngIf="formgroup.get('phone')?.invalid && formgroup.get('phone')?.touched"
+						class="text-danger mt-1">
+						Número de Celular
+					</div>
+				</div>
+				<div class="form-floating mb-3">
+					<textarea class="form-control" id="message" type="text" placeholder="Enter your message here..."
+						style="height: 10rem" formControlName="message" name="message"></textarea>
+					<label for="message">Mensaje</label>
+					<div *ngIf="formgroup.get('message')?.invalid && formgroup.get('message')?.touched"
+						class="text-danger mt-1">
+						Es necesario un mensaje.
+					</div>
+				</div>
+
+				<!-- Mensaje de éxito sin el enlace de Bootstrap -->
+				<div *ngIf="submitSuccess" id="submitSuccessMessage" class="alert alert-success" role="alert">
+					<div class="text-center mb-3">
+						<div class="fw-bolder">Mensaje enviado correctamente!</div>
+						Gracias por contactarnos, nos pondremos en contacto contigo a la brevedad posible.
+					</div>
+				</div>
+				<!-- Mensaje de error -->
+				<div *ngIf="submitError" id="submitErrorMessage" class="alert alert-danger" role="alert">
+					<div class="text-center text-danger mb-3">Error al mandar mensaje!</div>
+				</div>
+
+				<div class="d-grid">
+					<button (click)="onSubmit()" class="btn btn-primary btn-xl" id="submitButton"
+						type="button"><b>Enviar</b></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
