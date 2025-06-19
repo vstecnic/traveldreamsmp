@@ -48,7 +48,9 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": true, // Asegúrate de que esté activado en producción
+              "sourceMap": false // Desactiva sourcemaps en producción
             },
             "development": {
               "optimization": false,
